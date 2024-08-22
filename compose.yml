@@ -13,7 +13,7 @@ services:
 
   # Server
   service-integration-server:
-    image: service-integration-server:latest
+    image: bunchiek/service-integration-server:latest
     build:
       context: ./service-integration-server
       dockerfile: Dockerfile
@@ -29,7 +29,7 @@ services:
 
   # Client
   service-integration-client:
-    image: service-integration-client
+    image: bunchiek/service-integration-client:latest
     build:
       context: ./service-integration-client
       dockerfile: Dockerfile
