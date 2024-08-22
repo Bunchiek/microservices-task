@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # RabbitMQ Service
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # RabbitMQ port
+      - "15672:15672" # RabbitMQ Management UI
+    networks:
+      - app-network
+
+  # Server
+  service-integration-server:
+    image: service-integration-server:latest
+    build:
+      context: ./service-integration-server
+      dockerfile: Dockerfile
+    container_name: service-integration-server
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+  # Client
+  service-integration-client:
+    image: service-integration-client
+    build:
+      context: ./service-integration-client
+      dockerfile: Dockerfile
+    container_name: service-integration-client
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
